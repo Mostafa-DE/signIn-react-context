@@ -1,34 +1,27 @@
-import React, { Component, createContext } from "react";
-
+import React, { createContext } from "react";
+import useThemeContext from "../hooks/useThemeContext";
 export const ThemeContext = createContext();
 
-export class ThemeProvider extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isDarkMood: false
-        };
-        this.changeTheme = this.changeTheme.bind(this);
-    }
 
-    changeTheme () {
-        this.setState({ isDarkMood: !this.state.isDarkMood });
-    }
-
-    render () {
-        return (
-            <ThemeContext.Provider
-                value={{ ...this.state, changeTheme: this.changeTheme }}
-            >
-                {this.props.children}
-            </ThemeContext.Provider>
-        )
-    }
+export function ThemeProvider(props) {
+    const [isDarkMood, changeTheme] = useThemeContext(false);
+    return (
+        <ThemeContext.Provider
+            value={{ isDarkMood, changeTheme }}
+        >
+            {props.children}
+        </ThemeContext.Provider>
+    )
 }
 
-export const withThemeContext = Component => props => (
-    <ThemeContext.Consumer>
-        {value => <Component ThemeContext={value} {...props} />}
-    </ThemeContext.Consumer>
-)
+
+
+
+/* ----- High order component, we use it in class component only when we wanna use more than one context ------- */
+
+// export const withThemeContext = Component => props => (
+//     <ThemeContext.Consumer>
+//         {value => <Component ThemeContext={value} {...props} />}
+//     </ThemeContext.Consumer>
+// )
 

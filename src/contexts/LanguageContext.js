@@ -1,31 +1,23 @@
-import React, { Component, createContext } from 'react'
-
+import React, { createContext } from 'react'
+import useLanguageContext from '../hooks/useLanguageContext';
 export const LanguageContext = createContext();
 
-export class LanguageProvider extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            language: "english"
-        };
-        this.changeLanguage = this.changeLanguage.bind(this);
-    }
 
-    changeLanguage (evnt) {
-        this.setState({ language: evnt.target.value });
-    }
+export function LanguageProvider(props) {
+    const [language, changeLanguage] = useLanguageContext("english");
 
-    render () {
-        return (
-            <LanguageContext.Provider value={{ ...this.state, changeLanguage: this.changeLanguage }}>
-                {this.props.children}
-            </LanguageContext.Provider>
-        )
-    }
+    return (
+        <LanguageContext.Provider value={{ language, changeLanguage }}>
+            {props.children}
+        </LanguageContext.Provider>
+    )
 }
 
-export const withLanguageContext = Component => props => (
-    <LanguageContext.Consumer>
-        {value => <Component languageContext={value} {...props} />}
-    </LanguageContext.Consumer>
-)
+
+/* ----- High order component, we use it in class component only when we wanna use more than one context ------- */ 
+
+// export const withLanguageContext = Component => props => (
+//     <LanguageContext.Consumer>
+//         {value => <Component languageContext={value} {...props} />}
+//     </LanguageContext.Consumer>
+// )
